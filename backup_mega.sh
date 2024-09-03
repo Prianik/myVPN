@@ -1,20 +1,19 @@
 #! /bin/bash
 
-
 _TOKEN=9042c1b445527532sdfsdfsdfsdfsdfsdfds
 _DOMAIN=atm52.freemyip.com
 NAMEARH=xray-atm
 
+
+#логин-пароль от MEGA
 _MEGA_USER=user
 _MEGA_PASS=pass
-
-
-
+#
 day=$(date +%Y_%m_%d-%H%M)
 CLOUD_BACKUPS_DIR="${_DOMAIN}"
 LOCAL_BACKUPS_DIR="/tmp/${CLOUD_BACKUPS_DIR}"
 fname=${day}-${NAMEARH}
-BACKUP_COUNT=30; #The default value for the number of backups
+BACKUP_COUNT=30; #количество копий
 
 
 /usr/bin/curl https://freemyip.com/update?token=${_TOKEN=}&domain=${_DOMAIN}
@@ -40,7 +39,6 @@ rm -r /tmp/${fname}
 
 #Create base backups directory in the mega- cloud
 [ -z "$(mega-ls /${CLOUD_BACKUPS_DIR})" ] && mega-mkdir /${CLOUD_BACKUPS_DIR}
-
 
 #Upload backups
 #Remove old backups
