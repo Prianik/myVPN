@@ -45,22 +45,16 @@ uci set system.@system[0].timezone='MSK-3'
 uci commit system
 timezone=$(uci get system.@system[0].timezone); [ -z "$timezone" ] && timezone=UTC; echo "$timezone" > /tmp/TZ
 
-#bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/vm/ubuntu2404-vm.sh)"
-#uci show wireless -- выводит текущие подключения
-#read -p 'Input number of SSID:'
 
-NameSSI0=RT-5WiFi-AE72
-NameSSID1=RT-WiFi-AE72
-WiFiKey=R7aAPz5Y
-
-
-uci set wireless.radio0.disabled=0
-uci set wireless.radio1.disabled=0
+#NameSSID0=RT-5WiFi-AE72
+#NameSSID1=RT-WiFi-AE72
+#WiFiKey=R7aAPz5Y
+read -p "Enter NameSSID WiFi5: " NameSSID0 && read -p "Enter NameSSID WiFi2.4: " NameSSID1 && read -p "Enter WiFi password: " WiFiKey
 
 #uci set wireless.radio0.distance=100
 #uci set wireless.radio0.country='RU'
 #uci set wireless.@wifi-iface[0].disabled=1
-uci commit wireless
+
 
 # set wifi managed (AP) mode
 uci set wireless.@wifi-iface[0].device=radio0
@@ -71,6 +65,7 @@ uci set wireless.@wifi-iface[0].ssid=$NameSSID0
 uci set wireless.@wifi-iface[0].network='lan'
 uci set wireless.@wifi-iface[0].encryption=psk2
 uci set wireless.@wifi-iface[0].key=$WiFiKey
+uci set wireless.radio0.disabled=0
 uci commit wireless
 
 uci set wireless.@wifi-iface[1].device=radio1
@@ -81,5 +76,6 @@ uci set wireless.@wifi-iface[1].ssid=$NameSSID1
 uci set wireless.@wifi-iface[1].network='lan'
 uci set wireless.@wifi-iface[1].encryption=psk2
 uci set wireless.@wifi-iface[1].key=$WiFiKey
+uci set wireless.radio1.disabled=0
 uci commit wireless
 
