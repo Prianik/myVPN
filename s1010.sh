@@ -1,4 +1,9 @@
-#/bin/sh
+#!/bin/sh
+
+
+
+###!/usr/bin/env bash
+####!/usr/bin/env sh
 
 opkg update 
 opkg install ca-certificates wget-ssl
@@ -8,14 +13,18 @@ opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 wget -O "/tmp/nfqws-keenetic.pub" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub"
 opkg-key add /tmp/nfqws-keenetic.pub
 echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
-opkg update && opkg install nfqws-keenetic && opkg install nfqws-keenetic-web
 
-opkg install https-dns-proxy && opkg install luci-app-https-dns-proxy && service rpcd restart
+opkg update
+opkg install nfqws-keenetic
+opkg install nfqws-keenetic-web
+opkg install https-dns-proxy
+opkg install luci-app-https-dns-proxy
+service rpcd restart
 
 
 #cat /etc/crontabs/root
-echo  "24 0 * * 1 /bin/opkg update" >> /etc/crontabs/root
-echo  "29 0 * * 1 /bin/opkg upgrade nfqws-keenetic && /bin/opkg upgrade nfqws-keenetic-web"  >> /etc/crontabs/root
+#echo  "24 0 * * 1 /bin/opkg update" >> /etc/crontabs/root
+#echo  "29 0 * * 1 /bin/opkg upgrade nfqws-keenetic && /bin/opkg upgrade nfqws-keenetic-web"  >> /etc/crontabs/root
 
 #https://community.antifilter.download/
 #INSTAGRAM
@@ -45,11 +54,23 @@ uci set system.@system[0].timezone='MSK-3'
 uci commit system
 timezone=$(uci get system.@system[0].timezone); [ -z "$timezone" ] && timezone=UTC; echo "$timezone" > /tmp/TZ
 
+#bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/vm/ubuntu2404-vm.sh)"
+#uci show wireless -- выводит текущие подключения
 
-#NameSSID0=RT-5WiFi-AE72
-#NameSSID1=RT-WiFi-AE72
-#WiFiKey=R7aAPz5Y
-read -p "Enter NameSSID WiFi5: " NameSSID0 && read -p "Enter NameSSID WiFi2.4: " NameSSID1 && read -p "Enter WiFi password: " WiFiKey
+
+if [ $# -eq 3 ]; then
+    echo  "Parameters WiFi OK. "
+    NameSSID0=$1
+    NameSSID1=$2
+    WiFiKey=$3
+else
+    echo  "No parameters WiFi found. "
+    read -p "Enter NameSSID WiFi5: " NameSSID0
+    read -p "Enter NameSSID WiFi2.4: " NameSSID1
+    read -p "Enter WiFi password: " WiFiKey
+fi
+
+
 
 #uci set wireless.radio0.distance=100
 #uci set wireless.radio0.country='RU'
