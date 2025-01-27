@@ -103,4 +103,9 @@ uci set wireless.@wifi-iface[1].encryption=psk2
 uci set wireless.@wifi-iface[1].key=$WiFiKey
 uci set wireless.radio1.disabled=0
 uci commit wireless
+wifi
+
+#uci set network.lan.ipaddr='172.16.1.1'
+#uci commit network
+#/etc/init.d/network restart
 
