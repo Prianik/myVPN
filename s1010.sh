@@ -52,13 +52,17 @@ echo "rutracker.ru" >> /etc/nfqws/user.list
 service nfqws-keenetic restart
 #
 echo ".......SET Timezone and time"
-system.@system[0].zonename='Europe/Moscow'
+uci set system.@system[0].zonename='Europe/Moscow'
 uci set system.@system[0].timezone='MSK-3'
 uci commit system
 timezone=$(uci get system.@system[0].timezone); [ -z "$timezone" ] && timezone=UTC; echo "$timezone" > /tmp/TZ
 
 #bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/vm/ubuntu2404-vm.sh)"
-#uci show wireless -- выводит текущие подключения
+#uci show wireless -
+
+echo ".......SET crontab"
+#echo  "24 0 * * 1 /bin/opkg update" >> /etc/crontabs/root
+#echo  "29 0 * * 1 /bin/opkg upgrade nfqws-keenetic && /bin/opkg upgrade nfqws-keenetic-web"  >> /etc/crontabs/root
 
 
 echo ".......SET WiFi"
