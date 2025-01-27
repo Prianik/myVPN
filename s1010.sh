@@ -2,12 +2,12 @@
 
 ###!/usr/bin/env bash
 ####!/usr/bin/env sh
-
+echo ".......Updating OPKG and updating installed packages"
 opkg update 
 opkg install ca-certificates wget-ssl
 opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 
-
+echo ".......Installed nfqws"
 wget -O "/tmp/nfqws-keenetic.pub" "https://anonym-tsk.github.io/nfqws-keenetic/openwrt/nfqws-keenetic.pub"
 opkg-key add /tmp/nfqws-keenetic.pub
 echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt" > /etc/opkg/nfqws-keenetic.conf
@@ -15,6 +15,8 @@ echo "src/gz nfqws-keenetic https://anonym-tsk.github.io/nfqws-keenetic/openwrt"
 opkg update
 opkg install nfqws-keenetic
 opkg install nfqws-keenetic-web
+
+echo ".......Installed https-dns-proxy"
 opkg install https-dns-proxy
 opkg install luci-app-https-dns-proxy
 service rpcd restart
@@ -26,6 +28,8 @@ service rpcd restart
 
 #https://community.antifilter.download/
 #INSTAGRAM
+
+echo ".......ADD dns instagram"
 cp /etc/nfqws/user.list /etc/nfqws/user.list.bak
 echo "instagram.com" >> /etc/nfqws/user.list
 echo "instagram.fhrk1-1.fna.fbcdn.net" >> /etc/nfqws/user.list
@@ -47,6 +51,7 @@ echo "rutracker.org" >> /etc/nfqws/user.list
 echo "rutracker.ru" >> /etc/nfqws/user.list
 service nfqws-keenetic restart
 #
+echo ".......SET Timezone and time"
 system.@system[0].zonename='Europe/Moscow'
 uci set system.@system[0].timezone='MSK-3'
 uci commit system
@@ -56,6 +61,7 @@ timezone=$(uci get system.@system[0].timezone); [ -z "$timezone" ] && timezone=U
 #uci show wireless -- выводит текущие подключения
 
 
+echo ".......SET WiFi"
 if [ $# -eq 3 ]; then
     echo  "Parameters WiFi OK. "
     NameSSID0=$1
