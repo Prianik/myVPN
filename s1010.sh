@@ -55,10 +55,8 @@ echo ".......SET Timezone and time"
 uci set system.@system[0].zonename='Europe/Moscow'
 uci set system.@system[0].timezone='MSK-3'
 uci commit system
-timezone=$(uci get system.@system[0].timezone); [ -z "$timezone" ] && timezone=UTC; echo "$timezone" > /tmp/TZ
-
-#bash -c "$(wget -qLO - https://github.com/tteck/Proxmox/raw/main/vm/ubuntu2404-vm.sh)"
-#uci show wireless -
+#timezone=$(uci get system.@system[0].timezone); [ -z "$timezone" ] && timezone=UTC; echo "$timezone" > /tmp/TZ
+/etc/init.d/sysntpd restart
 
 echo ".......SET crontab"
 #echo  "24 0 * * 1 /bin/opkg update" >> /etc/crontabs/root
@@ -77,12 +75,6 @@ else
     read -p "Enter NameSSID WiFi2.4: " NameSSID1
     read -p "Enter WiFi password: " WiFiKey
 fi
-
-
-
-#uci set wireless.radio0.distance=100
-#uci set wireless.radio0.country='RU'
-#uci set wireless.@wifi-iface[0].disabled=1
 
 
 # set wifi managed (AP) mode
@@ -113,3 +105,5 @@ wifi
 #uci commit network
 #/etc/init.d/network restart
 
+echo ".......NOT SET IP LAN"
+echo "uci set network.lan.ipaddr='172.16.1.1' && uci commit network && /etc/init.d/network restart"
