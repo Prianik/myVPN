@@ -119,5 +119,6 @@ echo "uci set network.lan.ipaddr='172.16.1.1' && uci commit network && /etc/init
 uci set network.lan.ipaddr='172.16.1.1'
 uci commit network
 /etc/init.d/network restart
+rm *
 
 

@@ -87,6 +87,7 @@ uci set wireless.@wifi-iface[0].network='lan'
 uci set wireless.@wifi-iface[0].encryption=psk2
 uci set wireless.@wifi-iface[0].key=$WiFiKey
 uci set wireless.radio0.disabled=0
+#uci set wireless.@wifi-iface[0].wps_pushbutton='0'
 uci commit wireless
 
 uci set wireless.@wifi-iface[1].device=radio1
@@ -98,6 +99,7 @@ uci set wireless.@wifi-iface[1].network='lan'
 uci set wireless.@wifi-iface[1].encryption=psk2
 uci set wireless.@wifi-iface[1].key=$WiFiKey
 uci set wireless.radio1.disabled=0
+#uci set wireless.@wifi-iface[1].wps_pushbutton='0' 
 uci commit wireless
 wifi
 
@@ -105,5 +107,6 @@ wifi
 #uci commit network
 #/etc/init.d/network restart
 
-echo ".......NOT SET IP LAN"
+echo ".......NOT SET IP LAN (copy-past)"
 echo "uci set network.lan.ipaddr='172.16.1.1' && uci commit network && /etc/init.d/network restart"
+rm *
