@@ -29,27 +29,27 @@ service rpcd restart
 #https://community.antifilter.download/
 #INSTAGRAM
 
-echo ".......ADD dns instagram"
-cp /etc/nfqws/user.list /etc/nfqws/user.list.bak
-echo "instagram.com" >> /etc/nfqws/user.list
-echo "instagram.fhrk1-1.fna.fbcdn.net" >> /etc/nfqws/user.list
-echo "instagram.fkun2-1.fna.fbcdn.net" >> /etc/nfqws/user.list
-echo "instagram.frix7-1.fna.fbcdn.net" >> /etc/nfqws/user.list
-echo "instagram.fvno2-1.fna.fbcdn.net" >> /etc/nfqws/user.list
-echo "cdninstagram.com" >> /etc/nfqws/user.list
-echo "igcdn-photos-e-a.akamaihd.net" >> /etc/nfqws/user.list
-echo "instagramstatic.com" >> /etc/nfqws/user.list
-echo "scontent-hel3-1.cdninstagram.com" >> /etc/nfqws/user.list
-echo "static.cdninstagram.com" >> /etc/nfqws/user.list
-echo "scontent-arn2-1.cdninstagram.com" >> /etc/nfqws/user.list
-echo "scontent.cdninstagram.com" >> /etc/nfqws/user.list
-echo "edge-chat.instagram.com" >> /etc/nfqws/user.list
-echo "graph.instagram.com" >> /etc/nfqws/user.list
-echo "gateway.instagram.com" >> /etc/nfqws/user.list
-echo "kino.pub" >> /etc/nfqws/user.list
-echo "rutracker.org" >> /etc/nfqws/user.list
-echo "rutracker.ru" >> /etc/nfqws/user.list
-service nfqws-keenetic restart
+#echo ".......ADD dns instagram"
+#cp /etc/nfqws/user.list /etc/nfqws/user.list.bak
+#echo "instagram.com" >> /etc/nfqws/user.list
+#echo "instagram.fhrk1-1.fna.fbcdn.net" >> /etc/nfqws/user.list
+#echo "instagram.fkun2-1.fna.fbcdn.net" >> /etc/nfqws/user.list
+#echo "instagram.frix7-1.fna.fbcdn.net" >> /etc/nfqws/user.list
+#echo "instagram.fvno2-1.fna.fbcdn.net" >> /etc/nfqws/user.list
+#echo "cdninstagram.com" >> /etc/nfqws/user.list
+#echo "igcdn-photos-e-a.akamaihd.net" >> /etc/nfqws/user.list
+#echo "instagramstatic.com" >> /etc/nfqws/user.list
+#echo "scontent-hel3-1.cdninstagram.com" >> /etc/nfqws/user.list
+#echo "static.cdninstagram.com" >> /etc/nfqws/user.list
+#echo "scontent-arn2-1.cdninstagram.com" >> /etc/nfqws/user.list
+#echo "scontent.cdninstagram.com" >> /etc/nfqws/user.list
+#echo "edge-chat.instagram.com" >> /etc/nfqws/user.list
+#echo "graph.instagram.com" >> /etc/nfqws/user.list
+#echo "gateway.instagram.com" >> /etc/nfqws/user.list
+#echo "kino.pub" >> /etc/nfqws/user.list
+#echo "rutracker.org" >> /etc/nfqws/user.list
+#echo "rutracker.ru" >> /etc/nfqws/user.list
+#service nfqws-keenetic restart
 #
 echo ".......SET Timezone and time"
 uci set system.@system[0].zonename='Europe/Moscow'
@@ -58,7 +58,7 @@ uci commit system
 #timezone=$(uci get system.@system[0].timezone); [ -z "$timezone" ] && timezone=UTC; echo "$timezone" > /tmp/TZ
 /etc/init.d/sysntpd restart
 
-echo ".......SET crontab"
+#echo ".......SET crontab"
 #echo  "24 0 * * 1 /bin/opkg update" >> /etc/crontabs/root
 #echo  "29 0 * * 1 /bin/opkg upgrade nfqws-keenetic && /bin/opkg upgrade nfqws-keenetic-web"  >> /etc/crontabs/root
 
