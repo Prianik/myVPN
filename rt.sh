@@ -21,45 +21,16 @@ opkg install https-dns-proxy
 opkg install luci-app-https-dns-proxy
 service rpcd restart
 
-
 #cat /etc/crontabs/root
 #echo  "24 0 * * 1 /bin/opkg update" >> /etc/crontabs/root
 #echo  "29 0 * * 1 /bin/opkg upgrade nfqws-keenetic && /bin/opkg upgrade nfqws-keenetic-web"  >> /etc/crontabs/root
 
 #https://community.antifilter.download/
-#INSTAGRAM
 
 echo ".......ADD dns instagram"
+wget https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt
 cp /etc/nfqws/user.list /etc/nfqws/user.list.bak
-echo "instagram.com" >> /etc/nfqws/user.list
-echo "instagram.fhrk1-1.fna.fbcdn.net" >> /etc/nfqws/user.list
-echo "instagram.fkun2-1.fna.fbcdn.net" >> /etc/nfqws/user.list
-echo "instagram.frix7-1.fna.fbcdn.net" >> /etc/nfqws/user.list
-echo "instagram.fvno2-1.fna.fbcdn.net" >> /etc/nfqws/user.list
-echo "cdninstagram.com" >> /etc/nfqws/user.list
-echo "igcdn-photos-e-a.akamaihd.net" >> /etc/nfqws/user.list
-echo "instagramstatic.com" >> /etc/nfqws/user.list
-echo "scontent-hel3-1.cdninstagram.com" >> /etc/nfqws/user.list
-echo "static.cdninstagram.com" >> /etc/nfqws/user.list
-echo "scontent-arn2-1.cdninstagram.com" >> /etc/nfqws/user.list
-echo "scontent.cdninstagram.com" >> /etc/nfqws/user.list
-echo "edge-chat.instagram.com" >> /etc/nfqws/user.list
-echo "graph.instagram.com" >> /etc/nfqws/user.list
-echo "gateway.instagram.com" >> /etc/nfqws/user.list
-#
-echo "kino.pub" >> /etc/nfqws/user.list
-echo "rutracker.org" >> /etc/nfqws/user.list
-echo "rutracker.ru" >> /etc/nfqws/user.list
-#
-echo "facebook.com" >> /etc/nfqws/user.list
-echo "facebook.net" >> /etc/nfqws/user.list
-echo "fbcdn.net" >> /etc/nfqws/user.list
-#
-echo "amp-endpoint3.com" >> /etc/nfqws/user.list
-echo "amp-endpoint2.com" >> /etc/nfqws/user.list
-echo "meta.com " >> /etc/nfqws/user.list
-
-
+cat dns.txt >> /etc/nfqws/user.list
 service nfqws-keenetic restart
 #
 echo ".......SET Timezone and time"
@@ -118,6 +89,7 @@ echo ".......SET IP LAN 172.16.1.1"
 echo "uci set network.lan.ipaddr='172.16.1.1' && uci commit network && /etc/init.d/network restart"
 uci set network.lan.ipaddr='172.16.1.1'
 uci commit network
+echo ".......Local network IP address changed to 172.16.1.1 !!!!!!!!!!"
 /etc/init.d/network restart
 rm *
 
