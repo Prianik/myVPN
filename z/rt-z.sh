@@ -8,10 +8,10 @@ opkg install ca-certificates wget-ssl
 opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 
 echo ".......Installed ZAPRET"
-wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/luci-app-zapret_70.20250116_all.ipk
-wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zapret_70.20250116_mipsel_24kc.ipk
-opkg install zapret_70.20250116_mipsel_24kc.ipk
-opkg install luci-app-zapret_70.20250116_all.ipk
+wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/luci-app-zapret_70.20250213_all.ipk
+wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zapret_70.20250213_mipsel_24kc.ipk
+opkg install zapret_70.20250213_mipsel_24kc.ipk
+opkg install luci-app-zapret_70.20250213_all.ipk
 
 echo ".......ADD dns instagram"
 wget https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt
