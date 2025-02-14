@@ -2,16 +2,24 @@
 
 ###!/usr/bin/env bash
 ####!/usr/bin/env sh
+zver=70.20250213
+
 echo ".......Updating OPKG and updating installed packages"
 opkg update 
 opkg install ca-certificates wget-ssl
 opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 
-echo ".......Installed ZAPRET"
+echo ".......Installed ZAPRET vers "${zver}
 wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/luci-app-zapret_70.20250213_all.ipk
 wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zapret_70.20250213_mipsel_24kc.ipk
 opkg install zapret_70.20250213_mipsel_24kc.ipk
 opkg install luci-app-zapret_70.20250213_all.ipk
+
+wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/luci-app-zapret_${zver}_all.ipk
+wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zapret_${zver}_mipsel_24kc.ipk
+opkg install zapret_${zver}_mipsel_24kc.ipk
+opkg install luci-app-zapret_${zver}_all.ipk
+
 
 echo ".......ADD dns instagram"
 wget https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt
