@@ -9,15 +9,9 @@ opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 
 echo  "-----------------------------------------Identifying the latest version ZAPRET-----------------------------------------"
 rm *
-if [ $# -eq 0 ]; then
-    wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zver.txt
-    zver=$(cat zver.txt)
-    echo  "Version ZAPRET "${zver}
-else
-    zver=$1
-    echo  "Version ZAPRET "${zver}
-fi
-
+wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zver.txt
+zver=$(cat zver.txt)
+echo  "Version ZAPRET "${zver}
 echo ""
 echo ""
 echo "---------------------------------------------------------------------------------------------------------------"
