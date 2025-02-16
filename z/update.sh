@@ -9,19 +9,19 @@
 #echo ""
 #opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 
-a1=$(opkg list-installed | grep app-zapret | awk '{print $3 + 0}')
+a1=$(opkg list-installed | grep app-zapret | awk '{print $3}')
 echo ""
 echo ".......Installed version-${a1} ......."
 echo ""
 
 wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zver.txt
-zver=$(cat zver.txt | awk '{print $1 + 0}')
+zver=$(cat zver.txt)
 echo ""
 echo ".......Version update ${zver} ......."
 echo ""
 rm zver.txt
 
-if [ ${a1} -gt ${zver} ]; then
+if [ ${a1} -ne ${zver} ]; then
     echo ""
     echo ".......Installed or Update ZAPRET version-${zver} ......."
     echo ""
