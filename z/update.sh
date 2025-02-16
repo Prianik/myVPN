@@ -37,7 +37,7 @@ else
     echo  "......no new versions found...... "
     echo ""
 fi
-
+rm update.sh
 
 
 
