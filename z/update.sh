@@ -21,7 +21,7 @@ echo ".......Version update ${zver} ......."
 echo ""
 rm zver.txt
 
-if [ "${a1} -ne "${zver}" ]; then
+if [ "${a1}" -ne "${zver}" ]; then
     echo ""
     echo ".......Installed or Update ZAPRET version-${zver} ......."
     echo ""
