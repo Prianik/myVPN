@@ -11,11 +11,9 @@
 
 a1=$(opkg list-installed | grep app-zapret |awk '{print $3}')
 echo ""
-echo  echo ".......Installed version-${a1} ......."
+echo ".......Installed version-${a1} ......."
 echo ""
 
-echo ""
-echo  ".......Identifying the latest version ZAPRET......."
 wget  https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zver.txt
 zver=$(cat zver.txt)
 echo ""
@@ -23,7 +21,7 @@ echo  echo ".......Version update ${zver} ......."
 echo ""
 rm zver.txt
 
-if [ $a1 -gt ${zver} ]; then
+if [ $((a1)) -gt $((zver)) ]; then
     echo ""
     echo ".......Installed or Update ZAPRET version-${zver} ......."
     echo ""
