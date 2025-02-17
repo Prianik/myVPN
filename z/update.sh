@@ -1,5 +1,6 @@
 #!/bin/sh
 
+###wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh | sh
 #echo ""
 #echo ".......Updating OPKG ......."
 #echo ""
@@ -37,7 +38,7 @@ else
     echo  "......no new versions found...... "
     echo ""
 fi
-rm update.sh
+
 
 
 
