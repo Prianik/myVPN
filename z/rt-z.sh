@@ -47,7 +47,7 @@ service rpcd restart
 
 echo ""
 echo ".......SET crontab"
-echo  "#24 0 * * 1 usr/bin/wget https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh && /bin/sh update.sh" >> /etc/crontabs/root
+echo  "#24 0 * * 1 wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh | sh" >> /etc/crontabs/root
 echo ""
 
 echo ""
