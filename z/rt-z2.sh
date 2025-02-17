@@ -41,8 +41,8 @@ echo ".......Installing ZAPRET version-${zver}......."
 wget -q https://github.com/Prianik/myVPN/raw/refs/heads/main/z/luci-app-zapret_${zver}_all.ipk
 wget -q https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zapret_${zver}_mipsel_24kc.ipk
 
-opkg install --force-reinstall zapret_${zver}_mipsel_24kc.ipk
-opkg install --force-reinstall luci-app-zapret_${zver}_all.ipk
+opkg install zapret_${zver}_mipsel_24kc.ipk
+opkg install luci-app-zapret_${zver}_all.ipk
 rm -f zapret_${zver}_mipsel_24kc.ipk
 rm -f luci-app-zapret_${zver}_all.ipk
 
