@@ -68,7 +68,7 @@ echo ""
 echo ".......Setting up crontab......."
 echo ""
 echo "# Run update script every Monday at 00:24" >> /etc/crontabs/root
-echo "24 0 * * 1 /usr/bin/wget https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh && /bin/sh update.sh" >> /etc/crontabs/root
+echo "#24 0 * * 1 /usr/bin/wget https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh && /bin/sh update.sh" >> /etc/crontabs/root
 /etc/init.d/cron restart
 
 # Set timezone and time
