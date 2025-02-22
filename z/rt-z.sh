@@ -32,8 +32,8 @@ echo ".......Identifying the latest version of ZAPRET......."
 wget -q https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zver.txt
 zver=$(cat zver.txt)
 rm -f zver.txt
-echo "********Version ZAPRET******${zver}"
 echo ""
+echo "********Version ZAPRET******${zver}"
 echo ""
 
 # Install or update ZAPRET
@@ -67,8 +67,7 @@ service rpcd restart
 echo ""
 echo ".......Setting up crontab......."
 echo ""
-echo "# Run update script every Monday at 00:24" >> /etc/crontabs/root
-echo "24 0 * * 1 /usr/bin/wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh | sh" >> /etc/crontabs/root
+echo "31 0 * * 1 /usr/bin/wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh | sh" >> /etc/crontabs/root
 /etc/init.d/cron restart
 
 # Set timezone and time
