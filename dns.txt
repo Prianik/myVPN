@@ -25,4 +25,12 @@ fbcdn.net
 #
 amp-endpoint3.com
 amp-endpoint2.com
-meta.com 
+meta.com
+#
+tcmplayer.com
+tcplay.ru
+forapple.tv
+163.172.213.200
+163.172.211.92
+flowplayer.org
+tvcdn1.ru
