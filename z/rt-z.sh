@@ -51,8 +51,11 @@ echo ""
 echo ".......Adding DNS for Instagram......."
 echo ""
 wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt
+wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt
 cat dns.txt >> /opt/zapret/ipset/zapret-hosts-user.txt
+cat ip.txt >> /opt/zapret/ipset/zapret-ip-user.txt
 rm -f dns.txt
+rm -f ip.txt
 service zapret restart
 
 # Install https-dns-proxy
