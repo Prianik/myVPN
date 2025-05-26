@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt] &&  [wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt]
+if [/usr/bin/wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt] &&  [/usr/bin/wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt]
 then
     if [ -f dns.txt ] && [ -f ip.txt ]; then
         cat dns.txt > /opt/zapret/ipset/zapret-hosts-user.txt
