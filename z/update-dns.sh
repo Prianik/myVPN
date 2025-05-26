@@ -1,6 +1,7 @@
 #!/bin/sh
 
-if ([/usr/bin/wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt] &&  [/usr/bin/wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt])
+if wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt && \
+   wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt
 then
     if [ -f dns.txt ] && [ -f ip.txt ]; then
         cat dns.txt > /opt/zapret/ipset/zapret-hosts-user.txt
@@ -8,12 +9,12 @@ then
         rm -f dns.txt ip.txt
         service zapret restart
     else
-        echo "Загруженные файлы не найдены"
+        echo "Загруженные файлы не найдены" >&2
         rm -f dns.txt ip.txt
         exit 1
     fi
 else
-    echo "Ошибка загрузки файлов"
+    echo "Ошибка загрузки файлов" >&2
     rm -f dns.txt ip.txt
     exit 1
 fi
