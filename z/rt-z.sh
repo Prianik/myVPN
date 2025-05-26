@@ -71,7 +71,7 @@ echo ""
 echo ".......Setting up crontab......."
 echo ""
 echo "#31 0 * * 1 /usr/bin/wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh | sh" >> /etc/crontabs/root
-echo "#30 0 * * 1 /usr/bin/wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update-dns.sh | sh" >> /etc/crontabs/root
+echo "#30 0 * * 0 /usr/bin/wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update-dns.sh | sh" >> /etc/crontabs/root
 echo "30 3 * * * /sbin/reboot " >> /etc/crontabs/root
 /etc/init.d/cron restart
 
