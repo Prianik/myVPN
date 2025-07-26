@@ -51,19 +51,23 @@ echo ""
 
 # Install or update ZAPRET
 echo ".......Installing ZAPRET version-${zver}......."
-if ! wget -q "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/luci-app-zapret_${zver}_all.ipk" || \
-   ! wget -q "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zapret_${zver}_mipsel_24kc.ipk"; then
+
+vluci=luci-app-zapret_71.20250708-r1_all.ipk
+vzapret=zapret_71.20250708_mipsel_24kc.ipk
+
+if ! wget -q "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vluci}" || \
+   ! wget -q "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vzapret}"; then
     echo "❌ Error: Failed to download ZAPRET packages."
     exit 1
 fi
 
-if ! opkg install "zapret_${zver}_mipsel_24kc.ipk" || \
-   ! opkg install "luci-app-zapret_${zver}_all.ipk"; then
+if ! opkg install "${vzapret}" || \
+   ! opkg install "${vluci}"; then
     echo "❌ Error: Failed to install ZAPRET."
     exit 1
 fi
-rm -f zapret_${zver}_mipsel_24kc.ipk
-rm -f luci-app-zapret_${zver}_all.ipk
+rm -f ${vzapret}
+rm -f ${vluci}
 
 # Add DNS for Instagram
 echo ""
