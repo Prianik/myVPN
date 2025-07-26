@@ -36,24 +36,15 @@ echo ".......Updating installed packages......."
 echo ""
 opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
 
-# Identify the latest version of ZAPRET
-echo ""
-echo ".......Identifying the latest version of ZAPRET......."
-if ! wget -q https://github.com/Prianik/myVPN/raw/refs/heads/main/z/zver.txt; then
-    echo "❌ Error: Failed to fetch ZAPRET version."
-    exit 1
-fi
-zver=$(cat zver.txt)
-rm -f zver.txt
-echo ""
-echo "********Version ZAPRET******${zver}"
-echo ""
-
-# Install or update ZAPRET
-echo ".......Installing ZAPRET version-${zver}......."
-
+#-----------------------------------------------------------
+#
 vluci=luci-app-zapret_71.20250708-r1_all.ipk
 vzapret=zapret_71.20250708_mipsel_24kc.ipk
+#
+#-----------------------------------------------------------
+
+# Install or update ZAPRET
+echo ".......Installing ZAPRET version-${vzapret}......."
 
 if ! wget -q "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vluci}" || \
    ! wget -q "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vzapret}"; then
