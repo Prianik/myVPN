@@ -1,17 +1,13 @@
 #!/bin/sh
 
 # OpenWRT Configuration Script
-# Provides two modes:
-# 1. Update mode - updates packages without changing network settings
-# 2. Clean install mode - full system configuration with network setup
+# Provides multiple modes for system management
 
-# Exit immediately if any command fails
-set -e
-
-# Function for update mode
+# Function for full automatic update mode
 update_mode() {
+    set -e # Exit on error for this mode
     echo ""
-    echo ".......UPDATE MODE SELECTED......."
+    echo ".......FULL AUTOMATIC UPDATE MODE SELECTED......."
     echo ""
     
     # Update OPKG and install necessary packages
@@ -26,44 +22,62 @@ update_mode() {
         exit 1
     }
 
+    # Remove nfqws-keenetic packages
+    echo ""
+    echo ".......Removing nfqws-keenetic packages......."
+    echo ""
+    if opkg list-installed | grep -q nfqws-keenetic; then
+        opkg remove nfqws-keenetic* || {
+            echo "⚠ Warning: Failed to remove nfqws-keenetic packages (continuing anyway)."
+        }
+    else
+        echo "ℹ️  nfqws-keenetic packages not found. Skipping removal."
+    fi
+
     # Update installed packages
     echo ""
     echo ".......Upgrading installed packages......."
     echo ""
-    opkg list-upgradable | cut -f 1 -d ' ' | xargs -r opkg upgrade
+    opkg list-upgradable | awk '{print $1}' | xargs -r opkg upgrade
 
-    # Update ZAPRET if installed
+    # Update or install ZAPRET
+    echo ""
+    echo ".......Updating/Installing ZAPRET......."
+    echo ""
+    
+    # Update ZAPRET if installed, install if not installed
     if opkg list-installed | grep -q zapret; then
-        echo ""
-        echo ".......Updating ZAPRET......."
-        echo ""
-        #-----------------------------------------------------------
-        vluci=luci-app-zapret_71.20250708-r1_all.ipk
-        vzapret=zapret_71.20250708_mipsel_24kc.ipk
-        #-----------------------------------------------------------
+        echo "ℹ️  ZAPRET is installed. Proceeding with update..."
+    else
+        echo "ℹ️  ZAPRET is not installed. Proceeding with installation..."
+    fi
+    
+    #-----------------------------------------------------------
+    vluci=luci-app-zapret_71.20250708-r1_all.ipk
+    vzapret=zapret_71.20250708_mipsel_24kc.ipk
+    #-----------------------------------------------------------
 
-        if ! wget -q "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vluci}" || \
-           ! wget -q "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vzapret}"; then
-            echo "❌ Error: Failed to download ZAPRET packages."
-            exit 1
-        fi
-
-        if ! opkg install --force-reinstall "${vzapret}" || \
-           ! opkg install --force-reinstall "${vluci}"; then
-            echo "❌ Error: Failed to update ZAPRET."
-            exit 1
-        fi
-        rm -f ${vzapret}
-        rm -f ${vluci}
+    if ! wget --show-progress "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vluci}" || \
+       ! wget --show-progress "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vzapret}"; then
+        echo "❌ Error: Failed to download ZAPRET packages."
+        exit 1
     fi
 
+    if ! opkg install --force-reinstall "${vzapret}" || \
+       ! opkg install --force-reinstall "${vluci}"; then
+        echo "❌ Error: Failed to install/update ZAPRET."
+        exit 1
+    fi
+    rm -f "${vzapret}"
+    rm -f "${vluci}"
+    
     # Update DNS for Instagram if ZAPRET is installed
     if [ -d "/opt/zapret" ]; then
         echo ""
         echo ".......Updating Instagram DNS......."
         echo ""
-        if ! wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt || \
-           ! wget -q https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt; then
+        if ! wget --show-progress https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt || \
+           ! wget --show-progress https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt; then
             echo "❌ Error: Failed to download DNS/IP lists."
             exit 1
         fi
@@ -76,33 +90,164 @@ update_mode() {
         }
     fi
 
-    # Update https-dns-proxy if installed
+    # Update or install https-dns-proxy
+    echo ""
+    echo ".......Updating/Installing https-dns-proxy......."
+    echo ""
     if opkg list-installed | grep -q https-dns-proxy; then
-        echo ""
-        echo ".......Updating https-dns-proxy......."
-        echo ""
+        echo "ℹ️  https-dns-proxy is installed. Proceeding with update..."
         if ! opkg install --force-reinstall https-dns-proxy || ! opkg install --force-reinstall luci-app-https-dns-proxy; then
             echo "❌ Error: Failed to update https-dns-proxy."
             exit 1
         fi
-        service rpcd restart || {
-            echo "⚠ Warning: Failed to restart rpcd (continuing anyway)."
-        }
+    else
+        echo "ℹ️  https-dns-proxy is not installed. Proceeding with installation..."
+        if ! opkg install https-dns-proxy || ! opkg install luci-app-https-dns-proxy; then
+            echo "❌ Error: Failed to install https-dns-proxy."
+            exit 1
+        fi
     fi
+    
+    service rpcd restart || {
+        echo "⚠ Warning: Failed to restart rpcd (continuing anyway)."
+    }
 
     echo ""
-    echo "✅ Update completed successfully!......."
+    echo "✅ Full automatic update completed successfully!......."
+    echo ""
+}
+
+# Function for ZAPRET update only
+zapret_update_mode() {
+    set -e # Exit on error for this mode
+    echo ""
+    echo ".......ZAPRET UPDATE MODE SELECTED......."
+    echo ""
+    
+    # Update ZAPRET if installed, install if not installed
+    if opkg list-installed | grep -q zapret; then
+        echo "ℹ️  ZAPRET is installed. Proceeding with update..."
+        echo ""
+        echo ".......Updating ZAPRET......."
+        echo ""
+    else
+        echo "ℹ️  ZAPRET is not installed. Proceeding with installation..."
+        echo ""
+        echo ".......Installing ZAPRET......."
+        echo ""
+    fi
+    
+    #-----------------------------------------------------------
+    vluci=luci-app-zapret_71.20250708-r1_all.ipk
+    vzapret=zapret_71.20250708_mipsel_24kc.ipk
+    #-----------------------------------------------------------
+
+    if ! wget --show-progress "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vluci}" || \
+       ! wget --show-progress "https://github.com/Prianik/myVPN/raw/refs/heads/main/z/${vzapret}"; then
+        echo "❌ Error: Failed to download ZAPRET packages."
+        exit 1
+    fi
+
+    if ! opkg install --force-reinstall "${vzapret}" || \
+       ! opkg install --force-reinstall "${vluci}"; then
+        echo "❌ Error: Failed to install/update ZAPRET."
+        exit 1
+    fi
+    rm -f "${vzapret}"
+    rm -f "${vluci}"
+    
+    # Update DNS for Instagram after ZAPRET installation/update
+    if [ -d "/opt/zapret" ]; then
+        echo ""
+        echo ".......Updating Instagram DNS......."
+        echo ""
+        if ! wget --show-progress https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt || \
+           ! wget --show-progress https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt; then
+            echo "❌ Error: Failed to download DNS/IP lists."
+            exit 1
+        fi
+        cat dns.txt >> /opt/zapret/ipset/zapret-hosts-user.txt || exit 1
+        cat ip.txt >> /opt/zapret/ipset/zapret-ip-user.txt || exit 1
+        rm -f dns.txt
+        rm -f ip.txt
+        service zapret restart || {
+            echo "⚠ Warning: Failed to restart ZAPRET service (continuing anyway)."
+        }
+    fi
+    
+    echo ""
+    echo "✅ ZAPRET installation/update completed successfully!......."
+    echo ""
+}
+
+# Function for Instagram DNS update only
+instagram_dns_mode() {
+    set -e # Exit on error for this mode
+    echo ""
+    echo ".......INSTAGRAM DNS UPDATE MODE SELECTED......."
+    echo ""
+    
+    # Update DNS for Instagram if ZAPRET is installed
+    if [ -d "/opt/zapret" ]; then
+        echo ""
+        echo ".......Updating Instagram DNS......."
+        echo ""
+        if ! wget --show-progress https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/dns.txt || \
+           ! wget --show-progress https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main/ip.txt; then
+            echo "❌ Error: Failed to download DNS/IP lists."
+            exit 1
+        fi
+        cat dns.txt >> /opt/zapret/ipset/zapret-hosts-user.txt || exit 1
+        cat ip.txt >> /opt/zapret/ipset/zapret-ip-user.txt || exit 1
+        rm -f dns.txt
+        rm -f ip.txt
+        service zapret restart || {
+            echo "⚠ Warning: Failed to restart ZAPRET service (continuing anyway)."
+        }
+    else
+        echo "ℹ️  ZAPRET directory not found. Please install ZAPRET first (use mode 3 or 5)."
+        exit 1
+    fi
+    
+    echo ""
+    echo "✅ Instagram DNS update completed successfully!......."
+    echo ""
+}
+
+# Function for complete ZAPRET update with DNS
+zapret_complete_mode() {
+    set -e # Exit on error for this mode
+    echo ""
+    echo ".......COMPLETE ZAPRET UPDATE MODE SELECTED......."
+    echo ""
+    
+    zapret_update_mode
+    
+    echo ""
+    echo "✅ Complete ZAPRET update completed successfully!......."
     echo ""
 }
 
 # Function for clean install mode
 clean_install_mode() {
+    set -e # Exit on error for this mode
     echo ""
     echo ".......CLEAN INSTALL MODE SELECTED......."
     echo ""
     
-    # Run all update steps first
-    update_mode
+    # Check for WiFi parameters
+    if [ $# -eq 3 ]; then
+        echo ".......Wi-Fi parameters provided........"
+        NameSSID0=$1  # Wi-Fi 5 GHz SSID
+        NameSSID1=$2  # Wi-Fi 2.4 GHz SSID
+        WiFiKey=$3    # Wi-Fi password
+        echo "Using provided Wi-Fi credentials."
+    else
+        echo ".......No Wi-Fi parameters provided. Prompting for input........"
+        read -p "Enter NameSSID for WiFi5: " NameSSID0
+        read -p "Enter NameSSID for WiFi2.4: " NameSSID1
+        read -p "Enter Wi-Fi password: " WiFiKey
+    fi
 
     # Set timezone and time
     echo ""
@@ -119,18 +264,7 @@ clean_install_mode() {
     echo ""
     echo ".......Configuring Wi-Fi......."
     echo ""
-    if [ $# -eq 3 ]; then
-        echo ".......Wi-Fi parameters provided........"
-        NameSSID0=$1  # Wi-Fi 5 GHz SSID
-        NameSSID1=$2  # Wi-Fi 2.4 GHz SSID
-        WiFiKey=$3    # Wi-Fi password
-    else
-        echo ".......No Wi-Fi parameters provided. Prompting for input........"
-        read -p "Enter NameSSID for WiFi5: " NameSSID0
-        read -p "Enter NameSSID for WiFi2.4: " NameSSID1
-        read -p "Enter Wi-Fi password: " WiFiKey
-    fi
-
+    
     # Configure Wi-Fi 5 GHz (radio0)
     uci set wireless.@wifi-iface[0].device='radio0'
     uci set wireless.@wifi-iface[0].mode='ap'
@@ -182,6 +316,8 @@ clean_install_mode() {
     echo ""
     echo "✅ Clean installation completed successfully!......."
     echo ""
+    echo "NOTE: It's recommended to run Update mode first to ensure all packages are up to date."
+    echo ""
 }
 
 # Main menu
@@ -191,10 +327,21 @@ echo " OpenWRT Configuration Script"
 echo "=========================================="
 echo ""
 echo "Select mode:"
-echo "1) Update (package updates only)"
+echo "1) Full automatic update (remove keenetic, update packages, ZAPRET, DNS, https-dns-proxy)"
 echo "2) Clean install (full system configuration)"
+echo "3) ZAPRET update/install (install if not present)"
+echo "4) Instagram DNS update only (requires ZAPRET)"
+echo "5) Complete ZAPRET update (install/update + DNS)"
 echo ""
-read -p "Enter your choice (1 or 2): " choice
+echo "Notes:"
+echo "- For Clean install, you can provide WiFi parameters as arguments:"
+echo "  $0 2 \"WiFi5_SSID\" \"WiFi2.4_SSID\" \"Password\""
+echo "- Mode 1 performs complete system maintenance automatically"
+echo "- Mode 3 will install ZAPRET if not installed, or update if installed"
+echo "- Mode 4 requires ZAPRET to be installed first"
+echo "- Mode 5 combines modes 3 and 4"
+echo ""
+read -p "Enter your choice (1-5): " choice
 
 case $choice in
     1)
@@ -203,8 +350,17 @@ case $choice in
     2)
         clean_install_mode "$@"
         ;;
+    3)
+        zapret_update_mode
+        ;;
+    4)
+        instagram_dns_mode
+        ;;
+    5)
+        zapret_complete_mode
+        ;;
     *)
-        echo "❌ Invalid choice. Please enter 1 or 2."
+        echo "❌ Invalid choice. Please enter 1-5."
         exit 1
         ;;
 esac
