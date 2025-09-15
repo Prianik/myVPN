@@ -15,6 +15,43 @@ edge-chat.instagram.com
 graph.instagram.com
 gateway.instagram.com
 #
+discord.gg
+discord.com
+discordapp.com
+discord.media
+discordapp.net
+discordcdn.com
+discord.dev
+discord.new
+discord.gift
+discordstatus.com
+dis.gd
+discord.co
+#
+cdn-telegram.org
+comments.app
+contest.com
+fragment.com
+graph.org
+quiz.directory
+t.me
+tdesktop.com
+telega.one
+telegra.ph
+telegram-cdn.org
+telegram.dog
+telegram.me
+telegram.org
+telegram.space
+telesco.pe
+tg.dev
+tx.me
+usercontent.dev
+graph.facebook.com
+whatsapp.biz
+whatsapp.com
+whatsapp.net
+#
 kino.pub
 rutracker.org
 rutracker.ru
@@ -46,6 +83,7 @@ raw.githubusercontent.com
 githubusercontent.com
 valid.apple.com
 mictoiptv.org
+
 
 
 
