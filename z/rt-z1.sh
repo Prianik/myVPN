@@ -260,6 +260,14 @@ clean_install_mode() {
         echo "⚠ Warning: Failed to restart sysntpd (continuing anyway)."
     }
 
+echo ""
+echo ".......Setting up crontab......."
+echo ""
+echo "#31 0 * * 1 /usr/bin/wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update.sh | sh" >> /etc/crontabs/root
+echo "#30 0 * * 0 /usr/bin/wget -qO - https://github.com/Prianik/myVPN/raw/refs/heads/main/z/update-dns.sh | sh" >> /etc/crontabs/root
+echo "30 3 * * * /sbin/reboot " >> /etc/crontabs/root
+/etc/init.d/cron restart
+
     # Configure Wi-Fi
     echo ""
     echo ".......Configuring Wi-Fi......."
@@ -328,7 +336,7 @@ echo "=========================================="
 echo ""
 echo "Select mode:"
 echo "1) Full automatic update (remove keenetic, update packages, ZAPRET, DNS, https-dns-proxy)"
-echo "2) Clean install (full system configuration)"
+echo "2) Set NET, Wifi, crontab ... "
 echo "3) ZAPRET update/install (install if not present)"
 echo "4) Instagram DNS update only (requires ZAPRET)"
 echo "5) Complete ZAPRET update (install/update + DNS)"
