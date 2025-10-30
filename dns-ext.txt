@@ -1,3 +1,15 @@
+play.google.com
+android.com
+google-analytics.com
+googleusercontent.com
+gstatic.com
+gvt1.com
+ggpht.com
+dl.google.com
+dl-ssl.google.com
+android.clients.google.com
+gvt2.com
+gvt3.com
 keenetic.ru
 keenetic.com
 keenetic.pro
@@ -36,7 +48,6 @@ entware.net
 elschool.ru
 uchi.ru
 sferum.ru
-play.google.com
 apple.com
 cdn-apple.com
 avito.ru
