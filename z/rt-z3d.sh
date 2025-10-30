@@ -4,8 +4,8 @@
 # Provides multiple modes for system management and update
 
 # Configuration variables
-ZAPRET_LUCI_PKG="luci-app-zapret_71.20250708-r1_all.ipk"
-ZAPRET_PKG="zapret_71.20250708_mipsel_24kc.ipk"
+ZAPRET_LUCI_PKG="luci-app-zapret_72.20251022-r1_all.ipk"
+ZAPRET_PKG="zapret_72.20251022_mipsel_24kc.ipk"
 ZAPRET_BASE_URL="https://github.com/Prianik/myVPN/raw/refs/heads/main/z"
 DNS_FILES_URL="https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main"
 BACKUP_DIR="/root"
