@@ -263,14 +263,14 @@ update_zapret() {
 update_instagram_dns() {
     if [ -d "/opt/zapret" ]; then
         log_info "Updating Instagram DNS..."
-        for file in dns.txt ip.txt; do
+        for file in dns.txt dns-ext.txt ip.txt; do
             download_file "$DNS_FILES_URL/$file" "$file" || exit 1
         done
 
         cat dns.txt >> /opt/zapret/ipset/zapret-hosts-user.txt
         cat ip.txt >> /opt/zapret/ipset/zapret-ip-user.txt
 
-        rm -f dns.txt ip.txt
+        rm -f dns.txt ip.txt dns-ext.txt
 
         service zapret restart || log_warning "Failed to restart ZAPRET service (continuing anyway)"
     else
