@@ -269,6 +269,7 @@ update_instagram_dns() {
 
         cat dns.txt >> /opt/zapret/ipset/zapret-hosts-user.txt
         cat ip.txt >> /opt/zapret/ipset/zapret-ip-user.txt
+        cat dns-ext.txt >> /opt/zapret/ipset/zapret-hosts-user-exclude.txt
 
         rm -f dns.txt ip.txt dns-ext.txt
 
