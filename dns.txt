@@ -82,12 +82,19 @@ amp-endpoint3.com
 amp-endpoint2.com
 meta.com
 #
+#--kino.pub
+kino.pub
+www.kino.pub
+o.kino.pub
+mail.kino.pub
+api.kino.pub
+#
 tcmplayer.com
 tcplay.ru
 forapple.tv
 flowplayer.org
 tvcdn1.ru
-#--kino.pub
+#
 kino.pub
 m.pushbr.com
 pushbr.com
@@ -101,3 +108,4 @@ raw.githubusercontent.com
 githubusercontent.com
 valid.apple.com
 mictoiptv.org
+
