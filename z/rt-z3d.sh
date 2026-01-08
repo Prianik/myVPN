@@ -10,9 +10,6 @@ DNS_FILES_URL="https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main"
 BACKUP_DIR="/root"
 BACKUP_FILE="$BACKUP_DIR/config_backup.tar.gz"
 
-
-
-
 # Download retry parameters
 MAX_RETRIES=3
 RETRY_SLEEP=2
@@ -76,10 +73,15 @@ download_file() {
     return 1
 }
 
-#--
-download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE"
-sh "ZAPRET_VER.txt"
-#--
+# --- Download file version ---
+download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE" || {
+        echo "Failed to download $ZAPRET_VER_FILE"
+        exit 1
+    }
+
+# shellcheck disable=SC1090
+. "$ZAPRET_VER_FILE"
+#---
 
 # Helper: Copy config files manually
 copy_config_files() {
