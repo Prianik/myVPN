@@ -73,23 +73,6 @@ download_file() {
     return 1
 }
 
-# --- Download file version ---
-rm -f "$ZAPRET_VER_FILE"  # чистим старое
-download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE" || {
-    log_error "Failed to download $ZAPRET_VER_FILE"
-    exit 1
-}
-
-# Абсолютный путь для ash!
-SCRIPT_DIR="$(pwd)"
-# shellcheck disable=SC1090
-. "$SCRIPT_DIR/$ZAPRET_VER_FILE" || {
-    log_error "Failed to source $ZAPRET_VER_FILE"
-    exit 1
-}
-#---
-
-
 # Helper: Copy config files manually
 copy_config_files() {
     local src_dir=$1
@@ -261,6 +244,23 @@ update_zapret() {
     else
         log_info "ZAPRET is not installed. Proceeding with installation..."
     fi
+
+# --- Download file version ---
+log_info "ZAPRET is Download file version..."
+rm -f "$ZAPRET_VER_FILE"  # чистим старое
+download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE" || {
+    log_error "Failed to download $ZAPRET_VER_FILE"
+    exit 1
+}
+
+# Абсолютный путь для ash!
+SCRIPT_DIR="$(pwd)"
+# shellcheck disable=SC1090
+. "$SCRIPT_DIR/$ZAPRET_VER_FILE" || {
+    log_error "Failed to source $ZAPRET_VER_FILE"
+    exit 1
+}
+#---
 
     for pkg in "$ZAPRET_PKG" "$ZAPRET_LUCI_PKG"; do
         download_file "$ZAPRET_BASE_URL/$pkg" "$pkg" || exit 1
