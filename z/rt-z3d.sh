@@ -75,7 +75,7 @@ download_file() {
 
 # --- Download file version ---
 download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE" || {
-        echo "Failed to download $ZAPRET_VER_FILE"
+        log_error  "Failed to download $ZAPRET_VER_FILE"
         exit 1
     }
 
