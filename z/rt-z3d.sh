@@ -4,12 +4,14 @@
 # Provides multiple modes for system management and update
 
 # Configuration variables
-ZAPRET_LUCI_PKG="luci-app-zapret_72.20251227-r1_all.ipk"
-ZAPRET_PKG="zapret_72.20251227-r1_mipsel_24kc.ipk"
 ZAPRET_BASE_URL="https://github.com/Prianik/myVPN/raw/refs/heads/main/z"
+ZAPRET_VER_FILE="ZAPRET_VER.txt"
 DNS_FILES_URL="https://raw.githubusercontent.com/Prianik/myVPN/refs/heads/main"
 BACKUP_DIR="/root"
 BACKUP_FILE="$BACKUP_DIR/config_backup.tar.gz"
+
+
+
 
 # Download retry parameters
 MAX_RETRIES=3
@@ -73,6 +75,11 @@ download_file() {
     log_error "Failed to download: $url"
     return 1
 }
+
+#--
+download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE"
+sh "ZAPRET_VER.txt"
+#--
 
 # Helper: Copy config files manually
 copy_config_files() {
