@@ -74,14 +74,21 @@ download_file() {
 }
 
 # --- Download file version ---
+rm -f "$ZAPRET_VER_FILE"  # чистим старое
 download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE" || {
-        log_error  "Failed to download $ZAPRET_VER_FILE"
-        exit 1
-    }
+    log_error "Failed to download $ZAPRET_VER_FILE"
+    exit 1
+}
 
+# Абсолютный путь для ash!
+SCRIPT_DIR="$(pwd)"
 # shellcheck disable=SC1090
-. "$ZAPRET_VER_FILE"
+. "$SCRIPT_DIR/$ZAPRET_VER_FILE" || {
+    log_error "Failed to source $ZAPRET_VER_FILE"
+    exit 1
+}
 #---
+
 
 # Helper: Copy config files manually
 copy_config_files() {
