@@ -1,0 +1,2 @@
+ZAPRET_LUCI_PKG="luci-app-zapret_72.20251227-r1_all.ipk"
+ZAPRET_PKG="zapret_72.20251227-r1_mipsel_24kc.ipk"
