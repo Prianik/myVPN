@@ -234,7 +234,7 @@ update_mode() {
     log_success "Full automatic update completed successfully!"
 }
 
-# -Updating/Installing ttyd---
+# Updating/Installing ttyd
 ttyd_install() {
     log_info "Updating/Installing ttyd..."
     local ttyd_installed=$(opkg list-installed | grep -q ttyd && echo "yes" || echo "no")
@@ -244,19 +244,22 @@ ttyd_install() {
         log_error "Failed to update package lists. Check internet connection or repository URLs."
         exit 1
     fi
-    
+
     if [ "$ttyd_installed" = "yes" ]; then
         log_info "ttyd is installed. Proceeding with update..."
         opkg install --force-reinstall ttyd luci-app-ttyd || {
-            log_error "Failed to update https-dns-proxy"
-            exit 1        
+            log_error "Failed to update ttyd"
+            exit 1
+        }
     else
         log_info "ttyd is not installed. Proceeding with installation..."
         opkg install ttyd luci-app-ttyd || {
-            log_error "ttyd"
+            log_error "Failed to install ttyd"
             exit 1
-            }
+        }
     fi
+
+    log_success "ttyd installation/update completed successfully!"
 }
 
 # Update or install ZAPRET
@@ -270,22 +273,21 @@ update_zapret() {
         log_info "ZAPRET is not installed. Proceeding with installation..."
     fi
 
-# --- Download file version ---
-log_info "ZAPRET is Download file version..."
-rm -f "$ZAPRET_VER_FILE"  # чистим старое
-download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE" || {
-    log_error "Failed to download $ZAPRET_VER_FILE"
-    exit 1
-}
+    # Download file version
+    log_info "Downloading ZAPRET version file..."
+    rm -f "$ZAPRET_VER_FILE"
+    download_file "$ZAPRET_BASE_URL/$ZAPRET_VER_FILE" "$ZAPRET_VER_FILE" || {
+        log_error "Failed to download $ZAPRET_VER_FILE"
+        exit 1
+    }
 
-# Абсолютный путь для ash!
-SCRIPT_DIR="$(pwd)"
-# shellcheck disable=SC1090
-. "$SCRIPT_DIR/$ZAPRET_VER_FILE" || {
-    log_error "Failed to source $ZAPRET_VER_FILE"
-    exit 1
-}
-#---
+    # Load version variables (ash compatible)
+    SCRIPT_DIR="$(pwd)"
+    # shellcheck disable=SC1090
+    . "$SCRIPT_DIR/$ZAPRET_VER_FILE" || {
+        log_error "Failed to source $ZAPRET_VER_FILE"
+        exit 1
+    }
 
     for pkg in "$ZAPRET_PKG" "$ZAPRET_LUCI_PKG"; do
         download_file "$ZAPRET_BASE_URL/$pkg" "$pkg" || exit 1
@@ -298,6 +300,7 @@ SCRIPT_DIR="$(pwd)"
     }
 
     rm -f "$ZAPRET_PKG" "$ZAPRET_LUCI_PKG"
+    log_success "ZAPRET installation/update completed successfully!"
 }
 
 # Update Instagram DNS for ZAPRET
@@ -476,6 +479,31 @@ update_installed_packages() {
     fi
 }
 
+# Install Zapret-Manager (option 10)
+install_zapret_manager() {
+    log_info "INSTALLING ZAPRET-MANAGER..."
+    check_internet
+    
+    # Ensure wget with SSL support is available
+    if ! opkg list-installed | grep -q wget-ssl; then
+         log_info "Installing wget-ssl for secure download..."
+         opkg update && opkg install wget-ssl ca-bundle
+    fi
+    
+    log_info "Downloading and executing Zapret-Manager script..."
+    
+    # Using sh <(wget -O - URL) pattern as requested
+    # Note: Using 'sh -c' to ensure proper execution context
+    sh -c "$(wget -O - https://raw.githubusercontent.com/StressOzz/Zapret-Manager/main/Zapret-Manager.sh)"
+    
+    if [ $? -eq 0 ]; then
+        log_success "Zapret-Manager script execution finished."
+    else
+        log_error "Zapret-Manager execution failed."
+        exit 1
+    fi
+}
+
 # Main menu
 show_menu() {
     echo ""
@@ -492,7 +520,8 @@ show_menu() {
     echo "6) Manual backup"
     echo "7) Restore network settings from backup"
     echo "8) Update installed packages"
-    echo "9) Updating/Installing ttyd
+    echo "9) Updating/Installing ttyd"
+    echo "10) Install Zapret-Manager (StressOzz)"
     echo ""
     echo "Notes:"
     echo "- For modes 1 and 3, you can provide WiFi parameters as arguments:"
@@ -505,6 +534,7 @@ show_menu() {
     echo "- Mode 7: Manual restoration of network settings from backup"
     echo "- Mode 8: Update installed packages"
     echo "- Mode 9: Updating/Installing ttyd"
+    echo "- Mode 10: Run external Zapret-Manager installer"
     echo ""
 }
 
@@ -512,7 +542,7 @@ show_menu() {
 main() {
     show_menu
 
-    read -rp "Enter your choice (1-8): " choice
+    read -rp "Enter your choice (1-10): " choice
 
     case $choice in
         1)
@@ -542,8 +572,11 @@ main() {
         9)
             ttyd_install
             ;;
+        10)
+            install_zapret_manager
+            ;;
         *)
-            log_error "Invalid choice. Please enter 1-8."
+            log_error "Invalid choice. Please enter 1-10."
             exit 1
             ;;
     esac
