@@ -234,6 +234,31 @@ update_mode() {
     log_success "Full automatic update completed successfully!"
 }
 
+# -Updating/Installing ttyd---
+ttyd_install() {
+    log_info "Updating/Installing ttyd..."
+    local ttyd_installed=$(opkg list-installed | grep -q ttyd && echo "yes" || echo "no")
+
+    log_info "Updating package lists..."
+    if ! opkg update; then
+        log_error "Failed to update package lists. Check internet connection or repository URLs."
+        exit 1
+    fi
+    
+    if [ "$ttyd_installed" = "yes" ]; then
+        log_info "ttyd is installed. Proceeding with update..."
+        opkg install --force-reinstall ttyd luci-app-ttyd || {
+            log_error "Failed to update https-dns-proxy"
+            exit 1        
+    else
+        log_info "ttyd is not installed. Proceeding with installation..."
+        opkg install ttyd luci-app-ttyd || {
+            log_error "ttyd"
+            exit 1
+            }
+    fi
+}
+
 # Update or install ZAPRET
 update_zapret() {
     log_info "Updating/Installing ZAPRET..."
@@ -467,6 +492,7 @@ show_menu() {
     echo "6) Manual backup"
     echo "7) Restore network settings from backup"
     echo "8) Update installed packages"
+    echo "9) Updating/Installing ttyd
     echo ""
     echo "Notes:"
     echo "- For modes 1 and 3, you can provide WiFi parameters as arguments:"
@@ -478,6 +504,7 @@ show_menu() {
     echo "- Mode 6: Manual backup of network settings"
     echo "- Mode 7: Manual restoration of network settings from backup"
     echo "- Mode 8: Update installed packages"
+    echo "- Mode 9: Updating/Installing ttyd"
     echo ""
 }
 
@@ -511,6 +538,9 @@ main() {
             ;;
         8)
             update_installed_packages
+            ;;
+        9)
+            ttyd_install
             ;;
         *)
             log_error "Invalid choice. Please enter 1-8."
