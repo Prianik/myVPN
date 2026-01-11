@@ -214,21 +214,7 @@ update_mode() {
 
     update_zapret
     update_instagram_dns
-
-    log_info "Updating/Installing https-dns-proxy..."
-    if opkg list-installed | grep -q https-dns-proxy; then
-        log_info "https-dns-proxy is installed. Proceeding with update..."
-        opkg install --force-reinstall https-dns-proxy luci-app-https-dns-proxy || {
-            log_error "Failed to update https-dns-proxy"
-            exit 1
-        }
-    else
-        log_info "https-dns-proxy is not installed. Proceeding with installation..."
-        opkg install https-dns-proxy luci-app-https-dns-proxy || {
-            log_error "Failed to install https-dns-proxy"
-            exit 1
-        }
-    fi
+    update_dns_proxy
 
     service rpcd restart || log_warning "Failed to restart rpcd (continuing anyway)"
     log_success "Full automatic update completed successfully!"
@@ -320,6 +306,23 @@ update_instagram_dns() {
         service zapret restart || log_warning "Failed to restart ZAPRET service (continuing anyway)"
     else
         log_info "ZAPRET directory not found. Skipping DNS update."
+    fi
+}
+
+update_dns_proxy() {
+    log_info "Updating/Installing https-dns-proxy..."
+    if opkg list-installed | grep -q https-dns-proxy; then
+        log_info "https-dns-proxy is installed. Proceeding with update..."
+        opkg install --force-reinstall https-dns-proxy luci-app-https-dns-proxy || {
+            log_error "Failed to update https-dns-proxy"
+            exit 1
+        }
+    else
+        log_info "https-dns-proxy is not installed. Proceeding with installation..."
+        opkg install https-dns-proxy luci-app-https-dns-proxy || {
+            log_error "Failed to install https-dns-proxy"
+            exit 1
+        }
     fi
 }
 
@@ -479,7 +482,7 @@ update_installed_packages() {
     fi
 }
 
-# Install Zapret-Manager (option 10)
+# Install Zapret-Manager (option 11)
 install_zapret_manager() {
     log_info "INSTALLING ZAPRET-MANAGER..."
     check_internet
@@ -492,9 +495,8 @@ install_zapret_manager() {
     
     log_info "Downloading and executing Zapret-Manager script..."
     
-    # Using sh <(wget -O - URL) pattern as requested
-    # Note: Using 'sh -c' to ensure proper execution context
-    sh -c "$(wget -O - https://raw.githubusercontent.com/StressOzz/Zapret-Manager/main/Zapret-Manager.sh)"
+    # Secure execution pipe for OpenWRT (ash compatible)
+    wget -qO- https://raw.githubusercontent.com/StressOzz/Zapret-Manager/main/Zapret-Manager.sh | sh
     
     if [ $? -eq 0 ]; then
         log_success "Zapret-Manager script execution finished."
@@ -520,8 +522,9 @@ show_menu() {
     echo "6) Manual backup"
     echo "7) Restore network settings from backup"
     echo "8) Update installed packages"
-    echo "9) Updating/Installing ttyd"
-    echo "10) Install Zapret-Manager (StressOzz)"
+    echo "9) Updating/Installing update_dns_proxy"
+    echo "10) Updating/Installing ttyd"
+    echo "11) Install Zapret-Manager (StressOzz)"
     echo ""
     echo "Notes:"
     echo "- For modes 1 and 3, you can provide WiFi parameters as arguments:"
@@ -533,8 +536,9 @@ show_menu() {
     echo "- Mode 6: Manual backup of network settings"
     echo "- Mode 7: Manual restoration of network settings from backup"
     echo "- Mode 8: Update installed packages"
-    echo "- Mode 9: Updating/Installing ttyd"
-    echo "- Mode 10: Run external Zapret-Manager installer"
+    echo "- Mode 9: Updating/Installing https-dns-proxy"
+    echo "- Mode 10: Updating/Installing ttyd"
+    echo "- Mode 11: Run external Zapret-Manager installer"
     echo ""
 }
 
@@ -542,7 +546,7 @@ show_menu() {
 main() {
     show_menu
 
-    read -rp "Enter your choice (1-10): " choice
+    read -rp "Enter your choice (1-11): " choice
 
     case $choice in
         1)
@@ -570,13 +574,16 @@ main() {
             update_installed_packages
             ;;
         9)
-            ttyd_install
+            update_dns_proxy
             ;;
         10)
+            ttyd_install
+            ;;
+        11)
             install_zapret_manager
             ;;
         *)
-            log_error "Invalid choice. Please enter 1-10."
+            log_error "Invalid choice. Please enter 1-11."
             exit 1
             ;;
     esac
