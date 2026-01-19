@@ -251,7 +251,7 @@ update_mode() {
     fi
 
     # Install essential SSL support tools
-    for pkg in ca-certificates wget-ssl; do
+    for pkg in ca-certificates wget-ssl qrencode; do
         if ! opkg list-installed | grep -q "^$pkg"; then
             log_info "Installing $pkg..."
             opkg install "$pkg" || { log_error "Failed to install $pkg"; exit 1; }
@@ -672,7 +672,7 @@ toggle_web_access() {
         uci set ttyd.@ttyd[0].debug='0'
         # Set client options (title, font size)
         uci set ttyd.@ttyd[0].client_option='title=Zapret-Manager'
-        uci add_list ttyd.@ttyd[0].client_option='fontSize=16' 
+        uci add_list ttyd.@ttyd[0].client_option='fontSize=16'
 
         # 4. Create Standard Shell instance (Port 7682) -> Will be index [1]
         uci add ttyd ttyd >/dev/null
@@ -710,6 +710,29 @@ toggle_web_access() {
     fi
 }
 
+qr_code() {
+   
+    if ! opkg list-installed | grep -q qrencode; then
+        echo "Устанавливаю qrencode..."
+        opkg update
+        opkg install qrencode
+    fi
+    
+    clear
+
+    ssid_5g=$(uci get wireless.default_radio0.ssid)
+    password_5g=$(uci get wireless.default_radio0.key)
+    ssid_2g=$(uci get wireless.default_radio1.ssid)
+    password_2g=$(uci get wireless.default_radio1.key)
+
+    echo "=== 5 GHz Network $ssid_5g  Password:$password_5g ==="
+    qrencode -t ansiutf8 "WIFI:S:$ssid_5g;T:WPA2;P:$password_5g;;"
+    echo -e "\n\n\n"
+    echo "=== 2.4 GHz Network  $ssid_2g  Password:$password_2g ==="
+    qrencode -t ansiutf8 "WIFI:S:$ssid_2g;T:WPA2;P:$password_2g;;"
+}
+
+
 # ==============================================================================
 # Main Menu and Execution
 # ==============================================================================
@@ -733,6 +756,7 @@ show_menu() {
     echo "10) Updating/Installing ttyd"
     echo "11) Install Zapret-Manager (StressOzz)"
     echo "12) Toggle Web Access (Browser Terminal)"
+    echo "13) Output WiFi-code)"
     echo ""
     echo "Notes:"
     echo "- For modes 1 and 3, you can provide WiFi parameters as arguments:"
@@ -748,13 +772,14 @@ show_menu() {
     echo "- Mode 10: Updating/Installing ttyd"
     echo "- Mode 11: Run external Zapret-Manager installer"
     echo "- Mode 12: Enable/Disable Web Terminal (ttyd) with Zapret-Manager"
+    echo "- Mode 13: WiFi-code"
     echo ""
 }
 
 main() {
     show_menu
 
-    read -rp "Enter your choice (1-12): " choice
+    read -rp "Enter your choice (1-13): " choice
 
     case $choice in
         1)
@@ -792,6 +817,9 @@ main() {
             ;;
         12)
             toggle_web_access
+            ;;
+        13)
+            qr_code
             ;;
         *)
             log_error "Invalid choice. Please enter 1-12."
